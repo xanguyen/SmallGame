@@ -10,7 +10,7 @@ import java.io.*;
 import javax.imageio.*;
 
 public class second extends JPanel implements ActionListener, KeyListener {
-	Timer t = new Timer(5,this);
+	Timer t = new Timer(15,this);
 	double[] x, y , vx , vy;
 	double[] xobs, yobs, lenobs, heiobs;
 	int numObs = 5, DEAD = 0, D_R = 0, D_U = 1, D_L = 2, D_D = 3, lifeChampi = 1, BILLES = 0, CHAMPI = 1, bullet=0;
@@ -77,7 +77,12 @@ public class second extends JPanel implements ActionListener, KeyListener {
 
 		BufferedImage img = null;
 		try {
-    		img = ImageIO.read(new File("minichampi.png"));			//DESSINE UNE IMAGE CHOISIE
+    		if(vxchampi >= 0){
+    			img = ImageIO.read(new File("mushroom_resize_R.gif"));			//DESSINE UNE IMAGE CHOISIE
+    		}
+    		else{
+    			img = ImageIO.read(new File("mushroom_resize_L.gif"));
+    		}
 		} catch (IOException e) {
 			System.out.println("exeption");
 		}
@@ -91,13 +96,13 @@ public class second extends JPanel implements ActionListener, KeyListener {
 		}
 
 		if(bullet==1){
-			by = (int) ychampi;
-			bx = (int) xchmapi;
+			by = (int) ychampi + 10;
+			bx = (int) xchmapi + 20;
 			bvx = 1.5;
 			bullet++;
 		}
 		else if(bullet == -1){
-			by = (int) ychampi;
+			by = (int) ychampi + 10;
 			bx = (int) xchmapi;
 			bvx = -1.5;
 			bullet--;
@@ -208,7 +213,7 @@ public class second extends JPanel implements ActionListener, KeyListener {
 				}
 				else{
 					direction[i] = D_U;
-					y[i] -= 1;
+					yobs[i] -= 1;
 				}
 			}
 			else if(direction[i] == D_U){
@@ -217,7 +222,7 @@ public class second extends JPanel implements ActionListener, KeyListener {
 				}
 				else{
 					direction[i] = D_L;
-					x[i] -= 1;
+					xobs[i] -= 1;
 				}
 			}
 			else if(direction[i] == D_L){
@@ -226,7 +231,7 @@ public class second extends JPanel implements ActionListener, KeyListener {
 				}
 				else{
 					direction[i] = D_D;
-					y[i] += 1;
+					yobs[i] += 1;
 				}
 			}
 			else{
@@ -235,7 +240,7 @@ public class second extends JPanel implements ActionListener, KeyListener {
 				}
 				else{
 					direction[i] = D_R;
-					x[i] += 1;
+					xobs[i] += 1;
 				}
 			}
 
@@ -262,7 +267,7 @@ public class second extends JPanel implements ActionListener, KeyListener {
 		repaint();
 
 		if(!theresASurvivor()){
-			System.out.println("Le dernier survivant était : " + lastSurvivor);
+			System.out.println("Les Monstres gagnent ! \nLe dernier survivant était : " + lastSurvivor);
 			t.stop();
 		}
 		if(numObs==0){

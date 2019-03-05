@@ -3,7 +3,7 @@ import javax.swing.JFrame;
 public class Prog{
 	
 	public static void main(String[] args) {
-		int npair = 10;
+		int npair = 0;
 		double[] xs = new double[npair];
 		double[] ys = new double[npair];
 		double[] vxs = new double[npair];
@@ -16,7 +16,7 @@ public class Prog{
 			ys[npair/2+i] = 30.0 + Math.random() * 20;
 			vxs[i] = -0.5 + Math.random()*2;
 			vxs[npair/2+i] = 0.5 - Math.random() * 2;
-			vys[i] = vys[5+i] = 2.0;
+			vys[i] = vys[npair/2+i] = 2.0;
 		}
 
 		second s = new second(xs,ys, vxs,vys);
