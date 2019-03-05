@@ -13,10 +13,12 @@ public class second extends JPanel implements ActionListener, KeyListener {
 	Timer t = new Timer(5,this);
 	double[] x, y , vx , vy;
 	double[] xobs, yobs, lenobs, heiobs;
-	int numObs = 5, DEAD = 0, D_R = 0, D_U = 1, D_L = 2, D_D = 3, lifeChampi = 1, BILLES = 0, CHAMPI = 1;
+	int numObs = 5, DEAD = 0, D_R = 0, D_U = 1, D_L = 2, D_D = 3, lifeChampi = 1, BILLES = 0, CHAMPI = 1, bullet=0;
 	int[] life, direction;
-	double changeSens = 1.0 , xchmapi = 30.0, ychampi = 30.0, vxchampi = 0.0, vychampi = 0.0;
+	double changeSens = 1.0 , xchmapi = 30.0, ychampi = 30.0, vxchampi = 0.0, vychampi = 0.0, bvx = 0.0, bx, by;
 	String lastSurvivor = "";
+	Graphics2D g2;
+	boolean reloading = false;
 
 	public second(double[] xs, double[] ys, double[] v1, double[] v2){
 		this.x = xs; 
@@ -51,7 +53,7 @@ public class second extends JPanel implements ActionListener, KeyListener {
 		Toolkit.getDefaultToolkit().sync();
 		super.paintComponent(g);
 
-		Graphics2D g2 = (Graphics2D) g;
+		g2 = (Graphics2D) g;
 		
 		/*
 		g2.setColor(Color.RED);										//DESSINE LES OBSTACLES/RECTANGLES ROUGES
@@ -86,6 +88,24 @@ public class second extends JPanel implements ActionListener, KeyListener {
 			circle[i] = new Ellipse2D.Double(x[i],y[i],12,12);
 			g2.setColor(Color.BLUE);
 			g2.fill(circle[i]);
+		}
+
+		if(bullet==1){
+			by = (int) ychampi;
+			bx = (int) xchmapi;
+			bvx = 1.5;
+			bullet++;
+		}
+		else if(bullet == -1){
+			by = (int) ychampi;
+			bx = (int) xchmapi;
+			bvx = -1.5;
+			bullet--;
+		}
+		if(bullet != 0){
+			Ellipse2D balle = new Ellipse2D.Double(bx,by,10,10);
+			g2.setColor(Color.RED);
+			g2.fill(balle);
 		}
 				
 	}
@@ -184,38 +204,38 @@ public class second extends JPanel implements ActionListener, KeyListener {
 		for(int i=0; i<numObs; i++) {			//POUR LES OBSTOCLES/RECTANGLES ROUGES
 			if(direction[i] == D_R){
 				if(xobs[i]+lenobs[i]<600){
-					xobs[i] += 0.5;
+					xobs[i] += 1;
 				}
 				else{
 					direction[i] = D_U;
-					y[i] -= 0.5;
+					y[i] -= 1;
 				}
 			}
 			else if(direction[i] == D_U){
 				if(yobs[i]>0){
-					yobs[i] -= 0.5;
+					yobs[i] -= 1;
 				}
 				else{
 					direction[i] = D_L;
-					x[i] -= 0.5;
+					x[i] -= 1;
 				}
 			}
 			else if(direction[i] == D_L){
 				if(xobs[i]>0){
-					xobs[i] -= 0.5;
+					xobs[i] -= 1;
 				}
 				else{
 					direction[i] = D_D;
-					y[i] += 0.5;
+					y[i] += 1;
 				}
 			}
 			else{
 				if(yobs[i]+heiobs[i]<271){
-					yobs[i] += 0.5;
+					yobs[i] += 1;
 				}
 				else{
 					direction[i] = D_R;
-					x[i] += 0.5;
+					x[i] += 1;
 				}
 			}
 
@@ -227,6 +247,15 @@ public class second extends JPanel implements ActionListener, KeyListener {
 				else{
 					direction[i] += 1;
 				}
+			}
+		}
+		if(bullet !=0){
+			bx += bvx;
+			if(bx>600 || bx<0){
+				reloading = false;
+			}
+			else{
+				reloading = true;
 			}
 		}
 		repaint();
@@ -250,9 +279,20 @@ public class second extends JPanel implements ActionListener, KeyListener {
 	public void left(){
 		vxchampi = -1;
 	}
+	public void shoot(){
+		if(!reloading && lifeChampi!=DEAD){
+			if(vxchampi<0){
+				bullet = -1;
+			}
+			else{
+				bullet = 1;
+			}
+		}
+	}
 
 	public void keyPressed(KeyEvent e){
 		int code = e.getKeyCode();
+		if(code == KeyEvent.VK_SPACE){shoot();}
 		if(code == KeyEvent.VK_UP){up();}
 		if(code == KeyEvent.VK_DOWN){down();}
 		if(code == KeyEvent.VK_RIGHT){right();}
