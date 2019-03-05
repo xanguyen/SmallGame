@@ -258,10 +258,15 @@ public class second extends JPanel implements ActionListener, KeyListener {
 				reloading = true;
 			}
 		}
+		killEnemy();
 		repaint();
 
 		if(!theresASurvivor()){
 			System.out.println("Le dernier survivant était : " + lastSurvivor);
+			t.stop();
+		}
+		if(numObs==0){
+			System.out.println("You win !");
 			t.stop();
 		}
 	}
@@ -316,6 +321,39 @@ public class second extends JPanel implements ActionListener, KeyListener {
 		}
 		return false;
 
+	}
+
+	public void killEnemy(){
+		for(int i = 0; i<numObs; i++){
+			if(bx>xobs[i]-5 && bx<xobs[i]+lenobs[i]-5 && by>yobs[i]-5 && by<yobs[i]+heiobs[i]-5){
+				depopEnemy(i);
+				numObs--;
+				bx = 620;
+				bvx = 0;
+			}
+		}
+	}
+
+	public void depopEnemy(int index){
+		double[] newXobs = new double[numObs-1];
+		double[] newYobs = new double[numObs-1];
+		double[] newLenobs = new double[numObs-1];
+		double[] newHeiobs = new double[numObs-1];
+		int count = 0;
+
+		for(int i = 0; i<numObs; i++){
+			if(i != index){
+				newXobs[count] = xobs[i];
+				newYobs[count] = yobs[i];
+				newLenobs[count] = lenobs[i];
+				newHeiobs[count] = heiobs[i];
+				count++;
+			}
+		}
+		xobs = newXobs;
+		yobs = newYobs;
+		lenobs = newLenobs;
+		heiobs = newHeiobs;
 	}
 
 	public boolean theresASurvivor(){
