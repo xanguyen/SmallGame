@@ -10,12 +10,12 @@ import java.io.*;
 import javax.imageio.*;
 
 public class second extends JPanel implements ActionListener, KeyListener {
-	Timer t = new Timer(15,this);
+	Timer t = new Timer(5,this);
 	double[] x, y , vx , vy;
 	double[] xobs, yobs, lenobs, heiobs;
-	int numObs = 5, DEAD = 0, D_R = 0, D_U = 1, D_L = 2, D_D = 3, lifeChampi = 1, BILLES = 0, CHAMPI = 1, bullet=0;
+	int numObs = 10, DEAD = 0, D_R = 0, D_U = 1, D_L = 2, D_D = 3, lifeChampi = 1, BILLES = 0, CHAMPI = 1, bullet=0;
 	int[] life, direction;
-	double changeSens = 1.0 , xchmapi = 30.0, ychampi = 30.0, vxchampi = 0.0, vychampi = 0.0, bvx = 0.0, bx, by;
+	double changeSens = 1.0 , xchmapi = 20.0, ychampi = 30.0, vxchampi = 0.0, vychampi = 0.0, bvx = 0.0, bx, by, speedMechant = 0.5;
 	String lastSurvivor = "";
 	Graphics2D g2;
 	boolean reloading = false;
@@ -40,6 +40,9 @@ public class second extends JPanel implements ActionListener, KeyListener {
 			lenobs[i] = 18.0;
 			heiobs[i] = 28.0;
 			direction[i] = (int) (Math.random() * 4.0);
+			if(xobs[i]*xobs[i] + yobs[i]*yobs[i] < 10000){
+				i--;
+			}
 		}
 		t.start();
 		addKeyListener(this);
@@ -61,7 +64,6 @@ public class second extends JPanel implements ActionListener, KeyListener {
 			g2.fillRect((int)xobs[i], (int)yobs[i], (int)lenobs[i], (int)heiobs[i]);
 		}
 		*/
-
 
 		BufferedImage[] imgObs = new BufferedImage[numObs];
 		try {
@@ -209,38 +211,38 @@ public class second extends JPanel implements ActionListener, KeyListener {
 		for(int i=0; i<numObs; i++) {			//POUR LES OBSTOCLES/RECTANGLES ROUGES
 			if(direction[i] == D_R){
 				if(xobs[i]+lenobs[i]<600){
-					xobs[i] += 1;
+					xobs[i] += speedMechant;
 				}
 				else{
 					direction[i] = D_U;
-					yobs[i] -= 1;
+					yobs[i] -= speedMechant;
 				}
 			}
 			else if(direction[i] == D_U){
 				if(yobs[i]>0){
-					yobs[i] -= 1;
+					yobs[i] -= speedMechant;
 				}
 				else{
 					direction[i] = D_L;
-					xobs[i] -= 1;
+					xobs[i] -= speedMechant;
 				}
 			}
 			else if(direction[i] == D_L){
 				if(xobs[i]>0){
-					xobs[i] -= 1;
+					xobs[i] -= speedMechant;
 				}
 				else{
 					direction[i] = D_D;
-					yobs[i] += 1;
+					yobs[i] += speedMechant;
 				}
 			}
 			else{
 				if(yobs[i]+heiobs[i]<271){
-					yobs[i] += 1;
+					yobs[i] += speedMechant;
 				}
 				else{
 					direction[i] = D_R;
-					xobs[i] += 1;
+					xobs[i] += speedMechant;
 				}
 			}
 
@@ -251,6 +253,14 @@ public class second extends JPanel implements ActionListener, KeyListener {
 				}
 				else{
 					direction[i] += 1;
+				}
+			}
+			if(changeSens>0.999){
+				if(direction[i]==D_R){
+					direction[i] = D_D;
+				}
+				else{
+					direction[i] -= 1;
 				}
 			}
 		}
@@ -273,6 +283,8 @@ public class second extends JPanel implements ActionListener, KeyListener {
 		if(numObs==0){
 			System.out.println("You win !");
 			t.stop();
+			try{Thread.sleep(2000);}catch(Exception exep){}
+			System.exit(0);
 		}
 	}
 
