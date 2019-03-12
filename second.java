@@ -65,10 +65,18 @@ public class second extends JPanel implements ActionListener, KeyListener {
 		}
 		*/
 
+		BufferedImage img = null;
+		try {
+    		img = ImageIO.read(new File("images/fond.png"));			//DESSINE UNE IMAGE POUR LES POINTS
+    	}catch(Exception e){
+    		System.out.println("exeption");
+    	}
+    	g2.drawImage(img, 500,240,null);
+
 		BufferedImage[] imgObs = new BufferedImage[numObs];
 		try {
     		for(int i = 0; i< numObs; i++){
-    			imgObs[i] = ImageIO.read(new File("minimechant.png"));			//DESSINE UNE IMAGE DE MECHANT
+    			imgObs[i] = ImageIO.read(new File("images/minimechant.png"));			//DESSINE UNE IMAGE DE MECHANT
     			g2.drawImage(imgObs[i], (int) xobs[i], (int) yobs[i], null);
     		}
 		} catch (IOException e) {
@@ -76,19 +84,18 @@ public class second extends JPanel implements ActionListener, KeyListener {
 		}
 
 
-
-		BufferedImage img = null;
 		try {
     		if(vxchampi >= 0){
-    			img = ImageIO.read(new File("mushroom_resize_R.gif"));			//DESSINE UNE IMAGE CHOISIE
+    			img = ImageIO.read(new File("images/mushroom_resize_R.gif"));			//DESSINE UNE IMAGE CHOISIE
     		}
     		else{
-    			img = ImageIO.read(new File("mushroom_resize_L.gif"));
+    			img = ImageIO.read(new File("images/mushroom_resize_L.gif"));
     		}
 		} catch (IOException e) {
 			System.out.println("exeption");
 		}
 		g2.drawImage(img, (int)xchmapi,(int)ychampi,null);
+
 
 		Ellipse2D[] circle = new Ellipse2D[x.length];				//DESSINE LES BOULES BLEUES
 		for (int i=0; i<x.length ; i++) {
