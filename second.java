@@ -13,9 +13,13 @@ public class second extends JPanel implements ActionListener, KeyListener {
 	Timer t = new Timer(5,this);
 	double[] x, y , vx , vy;
 	double[] xobs, yobs, lenobs, heiobs;
-	int numObs = 10, DEAD = 0, D_R = 0, D_U = 1, D_L = 2, D_D = 3, lifeChampi = 1, BILLES = 0, CHAMPI = 1, bullet=0;
+	int numObs = 10, DEAD = 0, D_R = 0, D_U = 1, D_L = 2, D_D = 3, lifeChampi = 1, BILLES = 0, CHAMPI = 1, 
+		bullet=0, mobInit, delayFin = 0;
+
 	int[] life, direction;
-	double changeSens = 1.0 , xchmapi = 20.0, ychampi = 30.0, vxchampi = 0.0, vychampi = 0.0, bvx = 0.0, bx, by, speedMechant = 0.5;
+	double changeSens = 1.0 , xchmapi = 20.0, ychampi = 30.0, vxchampi = 0.0, vychampi = 0.0, bvx = 0.0, bx, by, 
+		   speedMechant = 0.5;
+
 	String lastSurvivor = "";
 	Graphics2D g2;
 	boolean reloading = false;
@@ -34,6 +38,7 @@ public class second extends JPanel implements ActionListener, KeyListener {
 		for(int i=0; i<x.length; i++) {
 			life[i] = 1;
 		}
+		mobInit = numObs;
 		for(int i=0; i<numObs; i++) {
 			xobs[i] = Math.random() * 500.0;
 			yobs[i] = Math.random() * 250.0;
@@ -72,6 +77,17 @@ public class second extends JPanel implements ActionListener, KeyListener {
     		System.out.println("exeption");
     	}
     	g2.drawImage(img, 500,240,null);
+
+    	int score = mobInit - numObs;
+		for(int i=0; i<2; i++){
+			try {
+    			img = ImageIO.read(new File("images/"+(score%10)+".png"));			//DESSINE UNE IMAGE POUR LES POINTS
+    		}catch(Exception e){
+    			System.out.println("exeption");
+    		}
+    		g2.drawImage(img, 580 - 10*i,247,null);
+    		score = score / 10;
+		}
 
 		BufferedImage[] imgObs = new BufferedImage[numObs];
 		try {
@@ -121,6 +137,7 @@ public class second extends JPanel implements ActionListener, KeyListener {
 			g2.setColor(Color.RED);
 			g2.fill(balle);
 		}
+
 				
 	}
 
@@ -284,14 +301,23 @@ public class second extends JPanel implements ActionListener, KeyListener {
 		repaint();
 
 		if(!theresASurvivor()){
-			System.out.println("Les Monstres gagnent ! \nLe dernier survivant était : " + lastSurvivor);
-			t.stop();
+			if(delayFin >400){
+				t.stop();
+				System.out.println("Les Monstres gagnent ! \nLe dernier survivant était : " + lastSurvivor);
+				try{Thread.sleep(500);}catch(Exception exep){}
+				System.exit(0);
+			}
+			else{delayFin++;}
 		}
 		if(numObs==0){
-			System.out.println("You win !");
-			t.stop();
-			try{Thread.sleep(2000);}catch(Exception exep){}
-			System.exit(0);
+			if(delayFin >400){
+				t.stop();
+				System.out.println("You win !");
+				try{Thread.sleep(500);}catch(Exception exep){}
+				System.exit(0);
+			}
+			else{delayFin++;}
+			
 		}
 	}
 
