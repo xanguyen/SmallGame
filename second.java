@@ -14,7 +14,7 @@ public class second extends JPanel implements ActionListener, KeyListener {
 	double[] x, y , vx , vy;
 	double[] xobs, yobs, lenobs, heiobs;
 	int numObs = 10, DEAD = 0, D_R = 0, D_U = 1, D_L = 2, D_D = 3, lifeChampi = 1, BILLES = 0, CHAMPI = 1, 
-		bullet=0, mobInit, delayFin = 0;
+		bullet=0, mobInit, delayFin = 0, scoreinit, endint = 0, round = 1;
 
 	int[] life, direction;
 	double changeSens = 1.0 , xchmapi = 20.0, ychampi = 30.0, vxchampi = 0.0, vychampi = 0.0, bvx = 0.0, bx, by, 
@@ -24,11 +24,12 @@ public class second extends JPanel implements ActionListener, KeyListener {
 	Graphics2D g2;
 	boolean reloading = false;
 
-	public second(double[] xs, double[] ys, double[] v1, double[] v2){
+	public second(double[] xs, double[] ys, double[] v1, double[] v2, int scoreinitial){
 		this.x = xs; 
 		this.y = ys;
 		this.vx = v1;
 		this.vy = v2;
+		this.scoreinit = scoreinitial;
 		life = new int[x.length];
 		xobs = new double[numObs];
 		yobs = new double[numObs];
@@ -78,7 +79,7 @@ public class second extends JPanel implements ActionListener, KeyListener {
     	}
     	g2.drawImage(img, 500,240,null);
 
-    	int score = mobInit - numObs;
+    	int score = scoreinit + mobInit - numObs;
 		for(int i=0; i<2; i++){
 			try {
     			img = ImageIO.read(new File("images/"+(score%10)+".png"));			//DESSINE UNE IMAGE POUR LES POINTS
@@ -303,7 +304,9 @@ public class second extends JPanel implements ActionListener, KeyListener {
 		if(!theresASurvivor()){
 			if(delayFin >400){
 				t.stop();
+				int score = scoreinit + mobInit - numObs;
 				System.out.println("Les Monstres gagnent ! \nLe dernier survivant était : " + lastSurvivor);
+				System.out.println("votre score est de "+score+" points");
 				try{Thread.sleep(500);}catch(Exception exep){}
 				System.exit(0);
 			}
@@ -312,9 +315,34 @@ public class second extends JPanel implements ActionListener, KeyListener {
 		if(numObs==0){
 			if(delayFin >400){
 				t.stop();
-				System.out.println("You win !");
+				scoreinit += mobInit;
+				System.out.println("You win round "+ round +" !");
+				round++;
 				try{Thread.sleep(500);}catch(Exception exep){}
-				System.exit(0);
+				numObs = mobInit;
+				xobs = new double[numObs];
+				yobs = new double[numObs];
+				lenobs = new double[numObs];
+				heiobs = new double[numObs];
+				direction = new int[numObs];
+				for(int i=0; i<x.length; i++) {
+					life[i] = 1;
+				}
+				for(int i=0; i<numObs; i++) {
+					xobs[i] = Math.random() * 500.0;
+					yobs[i] = Math.random() * 250.0;
+					lenobs[i] = 18.0;
+					heiobs[i] = 28.0;
+					direction[i] = (int) (Math.random() * 4.0);
+					if(xobs[i]*xobs[i] + yobs[i]*yobs[i] < 10000){
+						i--;
+					}
+				}
+				xchmapi = 20;
+				ychampi = 30;
+				vxchampi = 0;
+				vychampi = 0;
+				t.start();
 			}
 			else{delayFin++;}
 			

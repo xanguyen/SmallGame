@@ -19,13 +19,13 @@ public class Prog{
 			vys[i] = vys[npair/2+i] = 2.0;
 		}
 
-		second s = new second(xs,ys, vxs,vys);
+		second s = new second(xs,ys, vxs,vys,0);
 		JFrame f = new JFrame();
 		f.setResizable(false);
 		f.add(s);
 		f.setVisible(true);
 		f.setSize(600,300);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setTitle("Moving point");
+		f.setTitle("Petit jeu");
 	}
 }
